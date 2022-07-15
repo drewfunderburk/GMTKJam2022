@@ -44,6 +44,7 @@ private:
 	void InputUnJump();
 	void InputCrouch();
 	void InputUnCrouch();
+	void InputInteract();
 
 	void ApplyMovement();
 

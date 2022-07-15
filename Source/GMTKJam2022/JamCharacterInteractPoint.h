@@ -18,8 +18,21 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	
+public:
+	void SphereTraceFromActorToPoint(FHitResult& hit);
+	void Interact();
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "JamCharacterInteractPoint")
+	float SphereTraceRadius = 10.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "JamCharacterInteractPoint")
+	float GrabLerpSpeed = 1.0f;
+
+private:
+	class AProp* grabbedObject;
+
 };
