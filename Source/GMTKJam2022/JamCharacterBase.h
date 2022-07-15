@@ -88,5 +88,4 @@ private:
 	EJamPlayerState currentJamPlayerState;
 
 	float cameraInitialHeight;
-	FCollisionShape initialCapsuleCollisionShape;
 };
