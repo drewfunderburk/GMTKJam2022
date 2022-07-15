@@ -4,6 +4,8 @@
 #include "JamCharacterBase.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "JamCharacterInteractPoint.h"
+
 #include "GameFramework/CharacterMovementComponent.h"
 
 AJamCharacterBase::AJamCharacterBase()
@@ -25,6 +27,11 @@ AJamCharacterBase::AJamCharacterBase()
 	camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
 	camera->AttachToComponent(cameraBoom, FAttachmentTransformRules::KeepWorldTransform);
 
+	// Create and attach jam character interact point
+	jamCharacterInteractPoint = CreateDefaultSubobject<UJamCharacterInteractPoint>(TEXT("Jam Character Interact Point"));
+	jamCharacterInteractPoint->AttachToComponent(camera, FAttachmentTransformRules::KeepWorldTransform);
+	jamCharacterInteractPoint->SetRelativeLocation(FVector(350, 0, 0));
+
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
 }
 
@@ -33,14 +40,13 @@ void AJamCharacterBase::BeginPlay()
 	Super::BeginPlay();
 	currentJamPlayerState = EJamPlayerState::IDLE;
 	baseWalkSpeed = GetCharacterMovement()->MaxWalkSpeed;
-	
 }
 
 // Called every frame
 void AJamCharacterBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
+
 	// JamPlayerState FSM
 	switch (currentJamPlayerState)
 	{
