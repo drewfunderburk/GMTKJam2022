@@ -44,38 +44,53 @@ private:
 	void InputAimVertical(float value);
 	void InputSprint();
 	void InputUnSprint();
+	void InputJump();
+	void InputUnJump();
+	void InputCrouch();
+	void InputUnCrouch();
 
 	void ApplyMovement();
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "JamCharacter|Camera")
-		float MouseSensitivity = 1.0f;
+	float MouseSensitivity = 1.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "JamCharacter|Camera")
-		bool InvertY = false;
+	bool InvertY = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "JamCharacter|Movement")
-		float SprintSpeedMultiplier = 2.0f;
+	float SprintSpeedMultiplier = 2.0f;
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Camera")
-		class UCameraComponent* camera;
+	class  USpringArmComponent* cameraBoom;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "JamCharacter", meta = (AllowPrivateAccess = "true"))
-		float interactRange = 250.0f;
+	UPROPERTY(EditAnywhere, Category = "Camera")
+	class UCameraComponent* camera;
 
-	UPROPERTY(BlueprintReadOnly, Category = "JamCharacter", meta = (AllowPrivateAccess = "true"))
-		float verticalMovementInputValue = 0.0f;
 
 	UPROPERTY(BlueprintReadOnly, Category = "JamCharacter", meta = (AllowPrivateAccess = "true"))
-		float horizontalMovementInputValue = 0.0f;
+	bool bJumpInputValue = false;
+
+	UPROPERTY(BlueprintReadOnly, Category = "JamCharacter", meta = (AllowPrivateAccess = "true"))
+	bool bSprintInputValue = false;
+
+	UPROPERTY(BlueprintReadOnly, Category = "JamCharacter", meta = (AllowPrivateAccess = "true"))
+	bool bCrouchInputValue = false;
+
+	UPROPERTY(BlueprintReadOnly, Category = "JamCharacter", meta = (AllowPrivateAccess = "true"))
+	float verticalMovementInputValue = 0.0f;
+
+	UPROPERTY(BlueprintReadOnly, Category = "JamCharacter", meta = (AllowPrivateAccess = "true"))
+	float horizontalMovementInputValue = 0.0f;
 
 	UPROPERTY(BlueprintReadWrite, Category = "JamCharacter", meta = (AllowPrivateAccess = "true"))
-		float capsuleStartHeight = 0.0f;
+	float capsuleStartHeight = 0.0f;
 
 	UPROPERTY(BlueprintReadOnly, Category = "JamCharacter", meta = (AllowPrivateAccess = "true"))
-		float baseWalkSpeed;
+	float baseWalkSpeed;
 
 	UPROPERTY(BlueprintReadOnly, Category = "JamCharacter", meta = (AllowPrivateAccess = "true"))
-		EJamPlayerState currentJamPlayerState;
+	EJamPlayerState currentJamPlayerState;
 
+	float cameraInitialHeight;
 	FCollisionShape initialCapsuleCollisionShape;
 };
