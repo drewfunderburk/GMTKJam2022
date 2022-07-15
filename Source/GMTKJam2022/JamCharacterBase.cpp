@@ -6,7 +6,6 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
-// Sets default values
 AJamCharacterBase::AJamCharacterBase()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -29,7 +28,6 @@ AJamCharacterBase::AJamCharacterBase()
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
 }
 
-// Called when the game starts or when spawned
 void AJamCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
@@ -43,8 +41,6 @@ void AJamCharacterBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	
-	GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Cyan, FString::Printf(TEXT("State: %i"), currentJamPlayerState));
-
 	// JamPlayerState FSM
 	switch (currentJamPlayerState)
 	{
@@ -179,7 +175,6 @@ void AJamCharacterBase::Tick(float DeltaTime)
 	}
 }
 
-// Called to bind functionality to input
 void AJamCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);

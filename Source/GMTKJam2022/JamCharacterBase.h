@@ -23,18 +23,14 @@ class GMTKJAM2022_API AJamCharacterBase : public ACharacter
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	AJamCharacterBase();
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
@@ -60,10 +56,10 @@ public:
 	float SprintSpeedMultiplier = 2.0f;
 
 private:
-	UPROPERTY(EditAnywhere, Category = "Camera")
+	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	class  USpringArmComponent* cameraBoom;
 
-	UPROPERTY(EditAnywhere, Category = "Camera")
+	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	class UCameraComponent* camera;
 
 
