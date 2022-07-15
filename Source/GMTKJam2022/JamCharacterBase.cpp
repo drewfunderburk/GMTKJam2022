@@ -164,6 +164,8 @@ void AJamCharacterBase::Tick(float DeltaTime)
 		break;
 
 	case EJamPlayerState::FALLING:
+		ApplyMovement();
+
 		// Transition to Idle
 		if (GetCharacterMovement()->IsMovingOnGround())
 		{
