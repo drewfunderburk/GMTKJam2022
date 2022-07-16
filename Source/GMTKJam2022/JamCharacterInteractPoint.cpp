@@ -79,3 +79,30 @@ void UJamCharacterInteractPoint::Interact(FVector sphereCastStartPosition, UPhys
 		physicsHandle->ReleaseComponent();
 	}
 }
+
+void UJamCharacterInteractPoint::Throw(FVector impulse, UPhysicsHandleComponent* physicsHandle)
+{
+	UPrimitiveComponent* component = physicsHandle->GrabbedComponent;
+
+	if (component != nullptr)
+	{
+		physicsHandle->ReleaseComponent();
+
+		component->AddImpulse(
+			impulse * ThrowVelocityMultiplier,
+			NAME_None,
+			true
+		);
+
+		FVector angularImpulse = FVector(
+			FMath::RandRange(-1, 1),
+			FMath::RandRange(-1, 1),
+			FMath::RandRange(-1, 1)
+		);
+		component->AddAngularImpulseInRadians(
+			angularImpulse * ThrowAngularVelocityMultiplier,
+			NAME_None,
+			true
+		);
+	}
+}
