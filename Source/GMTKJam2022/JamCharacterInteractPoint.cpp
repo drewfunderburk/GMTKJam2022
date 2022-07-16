@@ -5,6 +5,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Interactable.h"
 #include "Prop.h"
+#include "Dice.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 
 
@@ -104,5 +105,11 @@ void UJamCharacterInteractPoint::Throw(FVector impulse, UPhysicsHandleComponent*
 			NAME_None,
 			true
 		);
+
+		ADice* dice = Cast<ADice>(component->GetOwner());
+		if (dice != nullptr)
+		{
+			dice->Throw();
+		}
 	}
 }
