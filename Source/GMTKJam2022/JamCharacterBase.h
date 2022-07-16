@@ -63,9 +63,11 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Camera")
 	class UCameraComponent* camera;
 
-	UPROPERTY(VisibleAnywhere, Category = "Camera")
+	UPROPERTY(VisibleAnywhere, Category = "JamCharacter")
 	class UJamCharacterInteractPoint* jamCharacterInteractPoint;
 
+	UPROPERTY(VisibleAnywhere, Category = "JamCharacter")
+	class UPhysicsHandleComponent* physicsHandle;
 
 	UPROPERTY(BlueprintReadOnly, Category = "JamCharacter", meta = (AllowPrivateAccess = "true"))
 	bool bJumpInputValue = false;

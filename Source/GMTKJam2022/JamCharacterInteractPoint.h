@@ -23,7 +23,7 @@ public:
 
 public:
 	void SphereTraceFromActorToPoint(FHitResult& hit);
-	void Interact();
+	void Interact(class UPhysicsHandleComponent* physicsHandle);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "JamCharacterInteractPoint")
@@ -33,6 +33,5 @@ public:
 	float GrabLerpSpeed = 1.0f;
 
 private:
-	class AProp* grabbedObject;
 
 };
