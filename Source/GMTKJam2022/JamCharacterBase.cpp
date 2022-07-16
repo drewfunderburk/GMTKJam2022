@@ -5,6 +5,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "JamCharacterInteractPoint.h"
+#include "PhysicsEngine/PhysicsHandleComponent.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -32,6 +33,9 @@ AJamCharacterBase::AJamCharacterBase()
 	jamCharacterInteractPoint->AttachToComponent(camera, FAttachmentTransformRules::KeepWorldTransform);
 	jamCharacterInteractPoint->SetRelativeLocation(FVector(350, 0, 0));
 
+	// Create physics handle
+	physicsHandle = CreateDefaultSubobject<UPhysicsHandleComponent>(TEXT("Physics Handle"));
+
 	GetCharacterMovement()->GetNavAgentPropertiesRef().bCanCrouch = true;
 }
 
@@ -46,6 +50,14 @@ void AJamCharacterBase::BeginPlay()
 void AJamCharacterBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	// Move grabbed component if there is one
+	if (physicsHandle->GrabbedComponent != nullptr)
+	{
+		// Prevent rigidbody from sleeping or grabbed object will sleep midair
+		physicsHandle->GrabbedComponent->WakeRigidBody();
+		physicsHandle->SetTargetLocation(jamCharacterInteractPoint->GetComponentLocation());
+	}
 
 	// JamPlayerState FSM
 	switch (currentJamPlayerState)
@@ -199,7 +211,9 @@ void AJamCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	InputComponent->BindAction("Crouch", IE_Pressed, this, &AJamCharacterBase::InputCrouch);
 	InputComponent->BindAction("Crouch", IE_Released, this, &AJamCharacterBase::InputUnCrouch);
 
-	InputComponent->BindAction("Interact", IE_Released, this, &AJamCharacterBase::InputInteract);
+	InputComponent->BindAction("Interact", IE_Pressed, this, &AJamCharacterBase::InputInteract);
+
+	InputComponent->BindAction("Throw", IE_Pressed, this, &AJamCharacterBase::InputThrow);
 }
 
 void AJamCharacterBase::InputMoveHorizontal(float value)
@@ -260,8 +274,12 @@ void AJamCharacterBase::InputUnCrouch()
 
 void AJamCharacterBase::InputInteract()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Cyan, FString::Printf(TEXT("CharacterBase: Interact")));
-	jamCharacterInteractPoint->Interact();
+	jamCharacterInteractPoint->Interact(camera->GetComponentLocation(), physicsHandle);
+}
+
+void AJamCharacterBase::InputThrow()
+{
+	jamCharacterInteractPoint->Throw(camera->GetForwardVector(), physicsHandle);
 }
 
 void AJamCharacterBase::ApplyMovement()

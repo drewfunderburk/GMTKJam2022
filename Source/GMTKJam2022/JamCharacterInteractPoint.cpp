@@ -5,6 +5,9 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Interactable.h"
 #include "Prop.h"
+#include "Dice.h"
+#include "PhysicsEngine/PhysicsHandleComponent.h"
+
 
 // Sets default values for this component's properties
 UJamCharacterInteractPoint::UJamCharacterInteractPoint()
@@ -28,17 +31,10 @@ void UJamCharacterInteractPoint::BeginPlay()
 void UJamCharacterInteractPoint::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	if (grabbedObject != nullptr)
-	{
-		FVector newLocation = FMath::Lerp(grabbedObject->GetActorLocation(), GetComponentLocation(), GrabLerpSpeed);
-		grabbedObject->SetActorLocation(newLocation);
-	}
 }
 
-void UJamCharacterInteractPoint::SphereTraceFromActorToPoint(FHitResult& hit)
+void UJamCharacterInteractPoint::SphereTraceFromPointToPoint(FVector start, FHitResult& hit)
 {
-	FVector start = GetOwner()->GetActorLocation();
 	FVector end = GetComponentLocation();
 	TArray<AActor*> actorsToIgnore;
 
@@ -50,7 +46,7 @@ void UJamCharacterInteractPoint::SphereTraceFromActorToPoint(FHitResult& hit)
 		UEngineTypes::ConvertToTraceType(ECC_Visibility),
 		false,
 		actorsToIgnore,
-		EDrawDebugTrace::ForDuration,
+		EDrawDebugTrace::None,
 		hit,
 		true,
 		FLinearColor::Blue,
@@ -59,23 +55,19 @@ void UJamCharacterInteractPoint::SphereTraceFromActorToPoint(FHitResult& hit)
 	);
 }
 
-void UJamCharacterInteractPoint::Interact()
+void UJamCharacterInteractPoint::Interact(FVector sphereCastStartPosition, UPhysicsHandleComponent* physicsHandle)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Cyan, FString::Printf(TEXT("JamCharacterInteractPoint: Interact")));
-	if (grabbedObject == nullptr)
+	if (physicsHandle->GrabbedComponent == nullptr)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Cyan, FString::Printf(TEXT("JamCharacterInteractPoint: GrabbedObject was null")));
 
 		FHitResult hit;
-		SphereTraceFromActorToPoint(hit);
+		SphereTraceFromPointToPoint(sphereCastStartPosition, hit);
 		AProp* prop = Cast<AProp>(hit.GetActor());
 
 		if (prop == nullptr) return;
 		else if (prop->bCanBePickedUp)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Cyan, FString::Printf(TEXT("JamCharacterInteractPoint: Grabbed object")));
-
-			grabbedObject = prop;
+			physicsHandle->GrabComponentAtLocationWithRotation(hit.GetComponent(), NAME_None, GetComponentLocation(), GetOwner()->GetActorRotation());
 		}
 
 		if (prop->GetClass()->ImplementsInterface(UInteractable::StaticClass()))
@@ -85,6 +77,39 @@ void UJamCharacterInteractPoint::Interact()
 	}
 	else
 	{
-		grabbedObject = nullptr;
+		physicsHandle->ReleaseComponent();
+	}
+}
+
+void UJamCharacterInteractPoint::Throw(FVector impulse, UPhysicsHandleComponent* physicsHandle)
+{
+	UPrimitiveComponent* component = physicsHandle->GrabbedComponent;
+
+	if (component != nullptr)
+	{
+		physicsHandle->ReleaseComponent();
+
+		component->AddImpulse(
+			impulse * ThrowVelocityMultiplier,
+			NAME_None,
+			true
+		);
+
+		FVector angularImpulse = FVector(
+			FMath::RandRange(-1, 1),
+			FMath::RandRange(-1, 1),
+			FMath::RandRange(-1, 1)
+		);
+		component->AddAngularImpulseInRadians(
+			angularImpulse * ThrowAngularVelocityMultiplier,
+			NAME_None,
+			true
+		);
+
+		ADice* dice = Cast<ADice>(component->GetOwner());
+		if (dice != nullptr)
+		{
+			dice->Throw();
+		}
 	}
 }
