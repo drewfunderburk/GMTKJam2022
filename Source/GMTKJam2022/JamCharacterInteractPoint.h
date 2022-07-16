@@ -22,8 +22,10 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 public:
-	void SphereTraceFromActorToPoint(FHitResult& hit);
-	void Interact(class UPhysicsHandleComponent* physicsHandle);
+	UFUNCTION(BlueprintCallable, Category = "JamCharacterInteractPoint")
+	void SphereTraceFromPointToPoint(FVector start, FHitResult& hit);
+	void Interact(FVector sphereCastStartPosition, class UPhysicsHandleComponent* physicsHandle);
+	void Throw(FVector impulse, class UPhysicsHandleComponent* physicsHandle);
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "JamCharacterInteractPoint")
@@ -33,5 +35,9 @@ public:
 	float GrabLerpSpeed = 1.0f;
 
 private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "JamCharacterInteractPoint", meta = (AllowPrivateAccess = "true"))
+	float ThrowVelocityMultiplier = 1000.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "JamCharacterInteractPoint", meta = (AllowPrivateAccess = "true"))
+	float ThrowAngularVelocityMultiplier = 100.0f;
 };

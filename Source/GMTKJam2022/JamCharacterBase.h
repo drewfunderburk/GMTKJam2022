@@ -45,6 +45,7 @@ private:
 	void InputCrouch();
 	void InputUnCrouch();
 	void InputInteract();
+	void InputThrow();
 
 	void ApplyMovement();
 
@@ -57,10 +58,10 @@ public:
 	float SprintSpeedMultiplier = 2.0f;
 
 private:
-	UPROPERTY(VisibleAnywhere, Category = "Camera")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	class  USpringArmComponent* cameraBoom;
 
-	UPROPERTY(VisibleAnywhere, Category = "Camera")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera", meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* camera;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "JamCharacter", meta = (AllowPrivateAccess = "true"))

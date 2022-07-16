@@ -211,7 +211,9 @@ void AJamCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 	InputComponent->BindAction("Crouch", IE_Pressed, this, &AJamCharacterBase::InputCrouch);
 	InputComponent->BindAction("Crouch", IE_Released, this, &AJamCharacterBase::InputUnCrouch);
 
-	InputComponent->BindAction("Interact", IE_Released, this, &AJamCharacterBase::InputInteract);
+	InputComponent->BindAction("Interact", IE_Pressed, this, &AJamCharacterBase::InputInteract);
+
+	InputComponent->BindAction("Throw", IE_Pressed, this, &AJamCharacterBase::InputThrow);
 }
 
 void AJamCharacterBase::InputMoveHorizontal(float value)
@@ -272,7 +274,12 @@ void AJamCharacterBase::InputUnCrouch()
 
 void AJamCharacterBase::InputInteract()
 {
-	jamCharacterInteractPoint->Interact(physicsHandle);
+	jamCharacterInteractPoint->Interact(camera->GetComponentLocation(), physicsHandle);
+}
+
+void AJamCharacterBase::InputThrow()
+{
+	jamCharacterInteractPoint->Throw(camera->GetForwardVector(), physicsHandle);
 }
 
 void AJamCharacterBase::ApplyMovement()
