@@ -198,6 +198,8 @@ void AJamCharacterBase::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 
 	InputComponent->BindAction("Crouch", IE_Pressed, this, &AJamCharacterBase::InputCrouch);
 	InputComponent->BindAction("Crouch", IE_Released, this, &AJamCharacterBase::InputUnCrouch);
+
+	InputComponent->BindAction("Interact", IE_Released, this, &AJamCharacterBase::InputInteract);
 }
 
 void AJamCharacterBase::InputMoveHorizontal(float value)
@@ -254,6 +256,12 @@ void AJamCharacterBase::InputCrouch()
 void AJamCharacterBase::InputUnCrouch()
 {
 	bCrouchInputValue = false;
+}
+
+void AJamCharacterBase::InputInteract()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Cyan, FString::Printf(TEXT("CharacterBase: Interact")));
+	jamCharacterInteractPoint->Interact();
 }
 
 void AJamCharacterBase::ApplyMovement()
