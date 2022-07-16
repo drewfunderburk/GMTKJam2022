@@ -272,7 +272,7 @@ void AJamCharacterBase::InputUnCrouch()
 
 void AJamCharacterBase::InputInteract()
 {
-	jamCharacterInteractPoint->Interact(physicsHandle);
+	jamCharacterInteractPoint->Interact(camera->GetComponentLocation(), physicsHandle);
 }
 
 void AJamCharacterBase::ApplyMovement()

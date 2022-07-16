@@ -32,9 +32,8 @@ void UJamCharacterInteractPoint::TickComponent(float DeltaTime, ELevelTick TickT
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
-void UJamCharacterInteractPoint::SphereTraceFromActorToPoint(FHitResult& hit)
+void UJamCharacterInteractPoint::SphereTraceFromPointToPoint(FVector start, FHitResult& hit)
 {
-	FVector start = GetOwner()->GetActorLocation();
 	FVector end = GetComponentLocation();
 	TArray<AActor*> actorsToIgnore;
 
@@ -55,19 +54,19 @@ void UJamCharacterInteractPoint::SphereTraceFromActorToPoint(FHitResult& hit)
 	);
 }
 
-void UJamCharacterInteractPoint::Interact(UPhysicsHandleComponent* physicsHandle)
+void UJamCharacterInteractPoint::Interact(FVector sphereCastStartPosition, UPhysicsHandleComponent* physicsHandle)
 {
 	if (physicsHandle->GrabbedComponent == nullptr)
 	{
 
 		FHitResult hit;
-		SphereTraceFromActorToPoint(hit);
+		SphereTraceFromPointToPoint(sphereCastStartPosition, hit);
 		AProp* prop = Cast<AProp>(hit.GetActor());
 
 		if (prop == nullptr) return;
 		else if (prop->bCanBePickedUp)
 		{
-			physicsHandle->GrabComponentAtLocationWithRotation(hit.GetComponent(), NAME_None, GetComponentLocation(), prop->GetActorRotation());
+			physicsHandle->GrabComponentAtLocationWithRotation(hit.GetComponent(), NAME_None, GetComponentLocation(), GetOwner()->GetActorRotation());
 		}
 
 		if (prop->GetClass()->ImplementsInterface(UInteractable::StaticClass()))
