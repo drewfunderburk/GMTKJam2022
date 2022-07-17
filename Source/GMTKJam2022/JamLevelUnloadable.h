@@ -23,4 +23,7 @@ class GMTKJAM2022_API IJamLevelUnloadable
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interactable")
 	void OnJamLevelUnload();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Interactable")
+	void OnJamLevelLoad();
 };
