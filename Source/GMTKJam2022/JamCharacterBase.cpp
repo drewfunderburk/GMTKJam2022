@@ -18,7 +18,7 @@ AJamCharacterBase::AJamCharacterBase()
 
 	// Create and attach camera boom
 	cameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("Camera Boom"));
-	cameraBoom->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepWorldTransform);
+	cameraBoom->SetupAttachment(RootComponent);
 	cameraBoom->SetRelativeLocation(FVector(0, 0, 40));
 	cameraBoom->TargetArmLength = 0;
 	cameraBoom->bUsePawnControlRotation = true;
@@ -26,11 +26,11 @@ AJamCharacterBase::AJamCharacterBase()
 
 	// Create and attach camera
 	camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-	camera->AttachToComponent(cameraBoom, FAttachmentTransformRules::KeepWorldTransform);
+	camera->SetupAttachment(cameraBoom);
 
 	// Create and attach jam character interact point
 	jamCharacterInteractPoint = CreateDefaultSubobject<UJamCharacterInteractPoint>(TEXT("Jam Character Interact Point"));
-	jamCharacterInteractPoint->AttachToComponent(camera, FAttachmentTransformRules::KeepWorldTransform);
+	jamCharacterInteractPoint->SetupAttachment(camera);
 	jamCharacterInteractPoint->SetRelativeLocation(FVector(350, 0, 0));
 
 	// Create physics handle
